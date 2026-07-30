@@ -34,8 +34,9 @@ import WaitingUsersPanel from './WaitingUsersPanel';
 
 import { startScreenSharing, stopScreenSharing } from './ScreenShareManager';
 import { boostAudioQuality } from './webrtcUtils';
+import server from '../environment';
 
-const SERVER_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
+const SERVER_URL = server.baseUrl;
 let connections = {};
 const peerConfigConnections = {
     "iceServers": [{ "urls": "stun:stun.l.google.com:19302" }]

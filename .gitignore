@@ -1,3 +1,17 @@
+# Environment Variables & Secrets
 backend/.env
+frontend/.env
+.env
+
+# Dependencies
+node_modules
 frontend/node_modules
 backend/node_modules
+
+# Build & Production Folders
+frontend/build
+frontend/dist
+
+# System Files & Logs
+.DS_Store
+*.log

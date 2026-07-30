@@ -3,8 +3,9 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Alert, Box, Button, Paper, Snackbar, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
+import server from '../environment';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = server.baseUrl;
 const STAR_LABELS = ['Very bad', '', '', '', 'Very good'];
 
 export default function MeetingEndScreen({ meetingCode, username, onRejoin }) {

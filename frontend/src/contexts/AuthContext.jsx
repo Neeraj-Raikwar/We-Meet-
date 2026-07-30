@@ -2,12 +2,13 @@ import axios from "axios"; // External cross origin node servers dynamic api req
 import httpStatus from "http-status"; // Corporate standardization tracking standard systems execution framework response state parameters codes import[cite: 3]
 import { createContext, useContext, useState } from "react"; // Reactive lifecycle context management controls hooks variables array definition import[cite: 3]
 import { useNavigate } from "react-router-dom"; // Frontend single page applications runtime routes dynamic structural navigator hook utility[cite: 3]
+import server from "../environment.js";
 
 export const AuthContext = createContext( {} ); // Initialization core communication platform context storage array framework definition[cite: 3]
 
 // Local development server environment routing location proxy connectivity url baseline target point initialization assignment[cite: 3]
 const client = axios.create({
-    baseURL : "http://localhost:8000/api/v1/users"
+    baseURL : `$${server.baseUrl}/api/v1/users`
 })
 
 export const AuthProvider = ({ children }) => {

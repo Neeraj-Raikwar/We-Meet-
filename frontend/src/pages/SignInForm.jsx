@@ -17,9 +17,10 @@ import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import MicrosoftIcon from '@mui/icons-material/Microsoft';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import server from '../environment';
 
 // Dynamic API host determination
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
+const BACKEND_URL = server.baseUrl;
 
 // Flip these to true once GOOGLE_CLIENT_ID / FACEBOOK_APP_ID etc. are set in
 // the backend .env — until then the buttons stay visible but disabled instead
