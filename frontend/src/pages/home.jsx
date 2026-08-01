@@ -112,12 +112,12 @@ function HomeComponent() {
                     </Typography>
                 </Box>
 
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: 2 } }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => navigate("/history")}>
                         <IconButton color="primary" sx={{ p: 0.5 }}>
                             <RestoreIcon />
                         </IconButton>
-                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#666', ml: 0.5 }}>History</Typography>
+                        <Typography variant="body2" sx={{ fontWeight: 600, color: '#666', ml: 0.5, display: { xs: 'none', sm: 'block' } }}>History</Typography>
                     </Box>
 
                     <Button

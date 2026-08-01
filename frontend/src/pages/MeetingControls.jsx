@@ -42,7 +42,7 @@ export default function MeetingControls({
 
     return (
         <Box sx={{
-            height: '80px',
+            height: { xs: '68px', sm: '80px' },
             bgcolor: '#202124',
             width: '100%',
             display: 'flex',
@@ -50,7 +50,7 @@ export default function MeetingControls({
             justifyContent: 'center',
             position: 'relative',
             zIndex: 100,
-            px: 2,
+            px: { xs: 0.5, sm: 2 },
             boxSizing: 'border-box'
         }}>
             {showEmojiPicker && (
@@ -59,17 +59,19 @@ export default function MeetingControls({
                     elevation={6}
                     sx={{
                         position: 'absolute',
-                        bottom: '90px',
+                        bottom: { xs: '78px', sm: '90px' },
                         left: '50%',
                         transform: 'translateX(-50%)',
                         bgcolor: '#ffffff',
                         borderRadius: '30px',
-                        p: '6px 16px',
+                        p: { xs: '4px 10px', sm: '6px 16px' },
                         display: 'flex',
-                        gap: 1.5,
+                        gap: { xs: 0.75, sm: 1.5 },
                         boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
                         alignItems: 'center',
-                        zIndex: 110
+                        zIndex: 110,
+                        maxWidth: 'calc(100vw - 24px)',
+                        overflowX: 'auto'
                     }}
                 >
                     {REACTION_EMOJIS.map((emoji, index) => (
@@ -77,9 +79,10 @@ export default function MeetingControls({
                             key={index}
                             onClick={() => handleReactionClick(emoji)}
                             sx={{
-                                fontSize: '1.6rem',
+                                fontSize: { xs: '1.3rem', sm: '1.6rem' },
                                 cursor: 'pointer',
                                 transition: 'transform 0.2s',
+                                flexShrink: 0,
                                 '&:hover': { transform: 'scale(1.3)' }
                             }}
                         >
@@ -89,17 +92,17 @@ export default function MeetingControls({
                 </Paper>
             )}
 
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2, mx: 'auto' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: { xs: 0.5, sm: 2 }, mx: 'auto', maxWidth: '100%', overflowX: 'auto' }}>
                 {/* Audio */}
                 <Tooltip title={audio ? "Turn off microphone" : "Turn on microphone"}>
-                    <IconButton onClick={onToggleAudio} sx={{ bgcolor: audio ? '#3c4043' : '#ea4335', color: '#fff', p: 1.5, '&:hover': { bgcolor: audio ? '#4a4e51' : '#dc2626' } }}>
+                    <IconButton onClick={onToggleAudio} sx={{ bgcolor: audio ? '#3c4043' : '#ea4335', color: '#fff', p: { xs: 1, sm: 1.5 }, '& svg': { fontSize: { xs: '1.15rem', sm: '1.5rem' } }, '&:hover': { bgcolor: audio ? '#4a4e51' : '#dc2626' } }}>
                         {audio ? <MicIcon /> : <MicOffIcon />}
                     </IconButton>
                 </Tooltip>
 
                 {/* Video */}
                 <Tooltip title={video ? "Turn off camera" : "Turn on camera"}>
-                    <IconButton onClick={onToggleVideo} sx={{ bgcolor: video ? '#3c4043' : '#ea4335', color: '#fff', p: 1.5, '&:hover': { bgcolor: video ? '#4a4e51' : '#dc2626' } }}>
+                    <IconButton onClick={onToggleVideo} sx={{ bgcolor: video ? '#3c4043' : '#ea4335', color: '#fff', p: { xs: 1, sm: 1.5 }, '& svg': { fontSize: { xs: '1.15rem', sm: '1.5rem' } }, '&:hover': { bgcolor: video ? '#4a4e51' : '#dc2626' } }}>
                         {video ? <VideocamIcon /> : <VideocamOffIcon />}
                     </IconButton>
                 </Tooltip>
@@ -114,7 +117,8 @@ export default function MeetingControls({
                                 sx={{
                                     bgcolor: (screen && isScreenSharer) ? '#ea4335' : (screen ? '#3c4043' : '#3c4043'),
                                     color: '#fff',
-                                    p: 1.5,
+                                    p: { xs: 1, sm: 1.5 },
+                                    '& svg': { fontSize: { xs: '1.15rem', sm: '1.5rem' } },
                                     '&.Mui-disabled': { bgcolor: '#282a2d', color: '#5f6368', opacity: 0.5 }
                                 }}
                             >
@@ -126,32 +130,31 @@ export default function MeetingControls({
 
                 {/* Hand Raise */}
                 <Tooltip title={isHandRaised ? "Lower hand" : "Raise hand"}>
-                    <IconButton onClick={onToggleHand} sx={{ bgcolor: isHandRaised ? '#8ab4f8' : '#3c4043', color: isHandRaised ? '#202124' : '#fff', p: 1.5 }}>
+                    <IconButton onClick={onToggleHand} sx={{ bgcolor: isHandRaised ? '#8ab4f8' : '#3c4043', color: isHandRaised ? '#202124' : '#fff', p: { xs: 1, sm: 1.5 }, '& svg': { fontSize: { xs: '1.15rem', sm: '1.5rem' } } }}>
                         <PanToolIcon />
                     </IconButton>
                 </Tooltip>
 
                 {/* Emoji Reaction */}
                 <Tooltip title="Send a reaction">
-                    <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)} sx={{ bgcolor: showEmojiPicker ? '#8ab4f8' : '#3c4043', color: showEmojiPicker ? '#202124' : '#fff', p: 1.5 }}>
+                    <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)} sx={{ bgcolor: showEmojiPicker ? '#8ab4f8' : '#3c4043', color: showEmojiPicker ? '#202124' : '#fff', p: { xs: 1, sm: 1.5 }, '& svg': { fontSize: { xs: '1.15rem', sm: '1.5rem' } } }}>
                         <SentimentSatisfiedAltIcon />
+                    </IconButton>
+                </Tooltip>
+
+                {/* Chat — moved into the row (was absolutely positioned and overlapping End Call on narrow screens) */}
+                <Tooltip title="Chat with everyone">
+                    <IconButton onClick={onToggleChat} sx={{ bgcolor: showModal ? '#8ab4f8' : '#3c4043', color: showModal ? '#202124' : '#fff', p: { xs: 1, sm: 1.5 }, '& svg': { fontSize: { xs: '1.15rem', sm: '1.5rem' } } }}>
+                        <Badge badgeContent={newMessages} color="error">
+                            <ChatIcon />
+                        </Badge>
                     </IconButton>
                 </Tooltip>
 
                 {/* End Call */}
                 <Tooltip title="Leave call">
-                    <IconButton onClick={onEndCall} sx={{ bgcolor: '#ea4335', color: '#fff', px: 2.5, py: 1.5, borderRadius: '24px', '&:hover': { bgcolor: '#dc2626' } }}>
+                    <IconButton onClick={onEndCall} sx={{ bgcolor: '#ea4335', color: '#fff', px: { xs: 1.5, sm: 2.5 }, py: { xs: 1, sm: 1.5 }, borderRadius: '24px', flexShrink: 0, '& svg': { fontSize: { xs: '1.15rem', sm: '1.5rem' } }, '&:hover': { bgcolor: '#dc2626' } }}>
                         <CallEndIcon />
-                    </IconButton>
-                </Tooltip>
-            </Box>
-
-            <Box sx={{ position: 'absolute', right: 24 }}>
-                <Tooltip title="Chat with everyone">
-                    <IconButton onClick={onToggleChat} sx={{ bgcolor: showModal ? '#8ab4f8' : '#3c4043', color: showModal ? '#202124' : '#fff', p: 1.5 }}>
-                        <Badge badgeContent={newMessages} color="error">
-                            <ChatIcon />
-                        </Badge>
                     </IconButton>
                 </Tooltip>
             </Box>

@@ -163,7 +163,7 @@ export default function History() {
                         <HistoryIcon />
                     </Box>
                     <Box>
-                        <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-0.5px', color: darkMode ? '#ffffff' : '#0f172a' }}>
+                        <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: '-0.5px', color: darkMode ? '#ffffff' : '#0f172a', fontSize: { xs: '1.5rem', sm: '2.125rem' } }}>
                             Meeting Logs & History
                         </Typography>
                         <Typography variant="body2" sx={{ color: darkMode ? '#94a3b8' : '#64748b' }}>

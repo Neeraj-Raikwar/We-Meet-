@@ -1,18 +1,17 @@
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
 import {
     Box,
     CssBaseline,
-    Grid,
-    IconButton,
     Paper,
     Snackbar,
     ThemeProvider,
     Typography,
     createTheme
 } from '@mui/material';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+import IconButton from '@mui/material/IconButton';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '../contexts/AuthContext';
 import { ThemeContext } from '../contexts/ThemeContext';
@@ -23,6 +22,7 @@ import SignUpForm from './SignUpForm';
 
 export default function Authentication() {
     const location = useLocation();
+    const navigate = useNavigate();
 
     // Auth & Form State Management
     const [username, setUsername] = useState("");
@@ -134,133 +134,167 @@ export default function Authentication() {
 
     return (
         <ThemeProvider theme={activeTheme}>
-            <Grid container component="main" sx={{ height: '100vh', width: '100vw', bgcolor: 'background.default' }}>
-                <CssBaseline />
+            <CssBaseline />
+            <Box
+                sx={{
+                    minHeight: '100vh',
+                    width: '100%',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    bgcolor: 'background.default'
+                }}
+            >
+                {/* Same radiant blob background as the landing page, for a consistent look */}
+                <style>{`
+                    @keyframes radiantDrift {
+                        0%   { transform: translate(-10%, -10%) scale(1); }
+                        50%  { transform: translate(10%, 5%) scale(1.15); }
+                        100% { transform: translate(-10%, -10%) scale(1); }
+                    }
+                    .radiant-bg-layer {
+                        position: absolute;
+                        inset: 0;
+                        z-index: 0;
+                        pointer-events: none;
+                        overflow: hidden;
+                    }
+                    .radiant-blob {
+                        position: absolute;
+                        width: 60vw;
+                        height: 60vw;
+                        max-width: 700px;
+                        max-height: 700px;
+                        border-radius: 50%;
+                        filter: blur(90px);
+                        animation: radiantDrift 18s ease-in-out infinite;
+                        opacity: var(--radiant-opacity, 0.25);
+                    }
+                    .radiant-blob.one { top: -15%; left: -10%; background: var(--brand-primary); }
+                    .radiant-blob.two { bottom: -20%; right: -10%; background: var(--brand-primary); animation-delay: -9s; }
+                `}</style>
+                <div className="radiant-bg-layer">
+                    <div className="radiant-blob one" style={{ '--radiant-opacity': darkMode ? 0.32 : 0.18 }} />
+                    <div className="radiant-blob two" style={{ '--radiant-opacity': darkMode ? 0.28 : 0.14 }} />
+                </div>
 
-                {/* Dark/Light Mode Switch Button */}
-                <Box sx={{ position: 'absolute', top: 16, right: 16, zIndex: 1000 }}>
+                {/* SIMPLE NAV */}
+                <Box
+                    component="nav"
+                    sx={{
+                        position: 'relative',
+                        zIndex: 1,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: { xs: '1rem 1.25rem', sm: '1.5rem 2rem' }
+                    }}
+                >
+                    <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                        onClick={() => navigate('/')}
+                    >
+                        <Typography variant="h6" sx={{ fontWeight: 800, fontSize: 'clamp(1.1rem, 4vw, 1.4rem)', color: 'var(--text-main)' }}>
+                            <span className="live-logo-icon">🔵</span> We<span style={{ color: '#2563eb' }}>Meet</span>
+                        </Typography>
+                    </Box>
                     <IconButton onClick={toggleTheme} color="inherit">
                         {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
                     </IconButton>
                 </Box>
 
-                {/* Left Branding Side Panel */}
-                <Grid
-                    item
-                    xs={12}
-                    sm={4}
-                    md={6}
-                    sx={{
-                        display: { xs: 'none', sm: 'flex' },
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        p: 4,
-                        bgcolor: darkMode ? '#090d13' : '#eff6ff',
-                        borderRight: '1px solid var(--nav-border)'
-                    }}
-                >
-                    <Box sx={{ textAlign: 'center' }}>
-                        <Typography variant="h1" sx={{ fontSize: '3.8rem', fontWeight: 900, color: 'var(--text-main)', letterSpacing: '-1px' }}>
-                            <span className="live-logo-icon">🔵</span> We<span style={{ color: '#2563eb' }}>Meet</span>
-                        </Typography>
-                        <Typography variant="body1" sx={{ fontSize: '1.2rem', color: 'var(--text-muted)', maxWidth: '450px', mx: 'auto', mt: 2, fontWeight: 400 }}>
-                            Enterprise-grade secure connectivity for crystal-clear video collaboration.
-                        </Typography>
-                    </Box>
-                </Grid>
+                {/* CENTERED AUTH CARD */}
+                <Box sx={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', px: 2, py: 4 }}>
+                    <Typography variant="body1" sx={{ color: 'var(--text-muted)', textAlign: 'center', maxWidth: '420px', mb: 3, fontSize: { xs: '0.95rem', sm: '1.05rem' } }}>
+                        Enterprise-grade secure connectivity for crystal-clear video collaboration.
+                    </Typography>
 
-                {/* Right Active Form Workspace */}
-                <Grid
-                    item
-                    xs={12}
-                    sm={8}
-                    md={6}
-                    component={Paper}
-                    elevation={0}
-                    square
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'space-between',
-                        borderLeft: '1px solid var(--nav-border)',
-                        overflowY: 'auto',
-                        p: 4
-                    }}
-                >
-                    {/* Top Switch Mode Navigation Link */}
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', mb: 2 }}>
-                        <Typography variant="body2" sx={{ color: 'var(--text-muted)' }}>
-                            {formState === 0 && "New to WeMeet? "}
-                            {formState === 1 && "Already have an account? "}
-                            {formState === 2 && "Recall operational profile keys? "}
-                            <Box
-                                component="span"
-                                sx={{ color: '#2563eb', cursor: 'pointer', fontWeight: 600, ml: 0.5 }}
-                                onClick={() => {
-                                    setFormState(formState === 2 ? 0 : (formState === 0 ? 1 : 0));
-                                    setError("");
-                                }}
-                            >
-                                {formState === 0 && "Sign Up Free"}
-                                {formState === 1 && "Sign In"}
-                                {formState === 2 && "Sign In Here"}
-                            </Box>
-                        </Typography>
-                    </Box>
+                    <Paper
+                        elevation={darkMode ? 0 : 3}
+                        sx={{
+                            width: '100%',
+                            maxWidth: '440px',
+                            borderRadius: '20px',
+                            border: darkMode ? '1px solid var(--nav-border)' : 'none',
+                            p: { xs: 3, sm: 5 },
+                            bgcolor: 'background.paper'
+                        }}
+                    >
+                        {/* Top Switch Mode Navigation Link */}
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%', mb: 2 }}>
+                            <Typography variant="body2" sx={{ color: 'var(--text-muted)' }}>
+                                {formState === 0 && "New to WeMeet? "}
+                                {formState === 1 && "Already have an account? "}
+                                {formState === 2 && "Recall operational profile keys? "}
+                                <Box
+                                    component="span"
+                                    sx={{ color: '#2563eb', cursor: 'pointer', fontWeight: 600, ml: 0.5 }}
+                                    onClick={() => {
+                                        setFormState(formState === 2 ? 0 : (formState === 0 ? 1 : 0));
+                                        setError("");
+                                    }}
+                                >
+                                    {formState === 0 && "Sign Up Free"}
+                                    {formState === 1 && "Sign In"}
+                                    {formState === 2 && "Sign In Here"}
+                                </Box>
+                            </Typography>
+                        </Box>
 
-                    {/* Dynamic Form Title and Forms rendering */}
-                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '420px', mx: 'auto' }}>
-                        <Typography variant="h4" sx={{ fontWeight: 800, mb: 4, color: 'var(--text-main)' }}>
-                            {formState === 0 && "Sign in"}
-                            {formState === 1 && "Create Account"}
-                            {formState === 2 && "Recover Access"}
-                        </Typography>
+                        {/* Dynamic Form Title and Forms rendering */}
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                            <Typography variant="h4" sx={{ fontWeight: 800, mb: 4, color: 'var(--text-main)', fontSize: { xs: '1.6rem', sm: '2.125rem' } }}>
+                                {formState === 0 && "Sign in"}
+                                {formState === 1 && "Create Account"}
+                                {formState === 2 && "Recover Access"}
+                            </Typography>
 
-                        {formState === 0 && (
-                            <SignInForm
-                                username={username} setUsername={setUsername}
-                                password={password} setPassword={setPassword}
-                                error={error} handleAuth={handleAuth}
-                                setFormState={setFormState}
-                            />
-                        )}
+                            {formState === 0 && (
+                                <SignInForm
+                                    username={username} setUsername={setUsername}
+                                    password={password} setPassword={setPassword}
+                                    error={error} handleAuth={handleAuth}
+                                    setFormState={setFormState}
+                                />
+                            )}
 
-                        {formState === 1 && (
-                            <SignUpForm
-                                name={name} setName={setName}
-                                username={username} setUsername={setUsername}
-                                password={password} setPassword={setPassword}
-                                error={error} handleAuth={handleAuth}
-                            />
-                        )}
+                            {formState === 1 && (
+                                <SignUpForm
+                                    name={name} setName={setName}
+                                    username={username} setUsername={setUsername}
+                                    password={password} setPassword={setPassword}
+                                    error={error} handleAuth={handleAuth}
+                                />
+                            )}
 
-                        {formState === 2 && (
-                            <ResetPasswordForm
-                                username={username} setUsername={setUsername}
-                                otp={otp} setOtp={setOtp}
-                                newPassword={newPassword} setNewPassword={setNewPassword}
-                                resetStep={resetStep} setResetStep={setResetStep}
-                                error={error} setError={setError}
-                                handleSendOTP={handleSendOTP} handleVerifyAndReset={handleVerifyAndReset}
-                                setFormState={setFormState}
-                            />
-                        )}
-                    </Box>
+                            {formState === 2 && (
+                                <ResetPasswordForm
+                                    username={username} setUsername={setUsername}
+                                    otp={otp} setOtp={setOtp}
+                                    newPassword={newPassword} setNewPassword={setNewPassword}
+                                    resetStep={resetStep} setResetStep={setResetStep}
+                                    error={error} setError={setError}
+                                    handleSendOTP={handleSendOTP} handleVerifyAndReset={handleVerifyAndReset}
+                                    setFormState={setFormState}
+                                />
+                            )}
+                        </Box>
+                    </Paper>
 
                     {/* Bottom Legal / Help Bar */}
-                    <Box sx={{ width: '100%', textAlign: 'center', mt: 'auto', pt: 4 }}>
+                    <Box sx={{ width: '100%', textAlign: 'center', mt: 4, maxWidth: '650px' }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 1 }}>
                             <Typography variant="caption" sx={{ color: '#2563eb', cursor: 'pointer', fontSize: '1rem', fontWeight: 500 }}>Help</Typography>
                             <Typography variant="caption" sx={{ color: '#2563eb', cursor: 'pointer', fontSize: '1rem', fontWeight: 500 }}>Terms</Typography>
                             <Typography variant="caption" sx={{ color: '#2563eb', cursor: 'pointer', fontSize: '1rem', fontWeight: 500 }}>Privacy</Typography>
                         </Box>
-                        <Typography variant="caption" sx={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, maxWidth: '650px', display: 'block', mx: 'auto', px: 2 }}>
+                        <Typography variant="caption" sx={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, display: 'block', mx: 'auto', px: 2 }}>
                             WeMeet is protected by reCAPTCHA and the Google <span style={{ color: '#2563eb', cursor: 'pointer', fontWeight: 500 }}>Privacy Policy</span> and <span style={{ color: '#2563eb', cursor: 'pointer', fontWeight: 500 }}>Terms of Service</span> apply.
                         </Typography>
                     </Box>
-                </Grid>
-            </Grid>
+                </Box>
+            </Box>
 
             {/* Notification Bar */}
             <Snackbar open={open} autoHideDuration={4000} message={message} onClose={() => setOpen(false)} />

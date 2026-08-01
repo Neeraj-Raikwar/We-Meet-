@@ -12,6 +12,7 @@ import {
     TextField,
     Typography
 } from '@mui/material';
+import { keyframes } from '@mui/material/styles';
 import { useEffect, useRef, useState } from 'react';
 import io from "socket.io-client";
 
@@ -32,15 +33,31 @@ import PeoplePanel from './PeoplePanel';
 import TranscriptionPanel from './TranscriptionPanel';
 import WaitingUsersPanel from './WaitingUsersPanel';
 
+import server from '../environment';
 import { startScreenSharing, stopScreenSharing } from './ScreenShareManager';
 import { boostAudioQuality } from './webrtcUtils';
-import server from '../environment';
 
 const SERVER_URL = server.baseUrl;
 let connections = {};
 const peerConfigConnections = {
     "iceServers": [{ "urls": "stun:stun.l.google.com:19302" }]
 };
+
+// Reaction emoji float-up animation. Using MUI's `keyframes` helper (backed by
+// emotion, which MUI already ships with) instead of a raw <style> tag — this
+// guarantees the animation is registered before anything tries to use it and
+// avoids relying on untracked global CSS.
+const floatUpAnimation = keyframes`
+    0%   { transform: translateY(0) translateX(0) scale(0.7) rotate(0deg); opacity: 0; }
+    10%  { opacity: 1; }
+    100% { transform: translateY(-420px) translateX(var(--drift, 0px)) scale(1.3) rotate(var(--spin, 0deg)); opacity: 0; }
+`;
+
+const handPulseAnimation = keyframes`
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.1); }
+    100% { transform: scale(1); }
+`;
 
 export default function VideoMeetComponent() {
     let socketRef = useRef();
@@ -543,9 +560,11 @@ export default function VideoMeetComponent() {
 
     const triggerEmojiAnimation = (emoji) => {
         const id = Date.now() + Math.random();
-        const leftOffset = Math.floor(Math.random() * 60) + 20;
-        setFloatingEmojis(prev => [...prev, { id, emoji, left: `${leftOffset}%` }]);
-        setTimeout(() => setFloatingEmojis(prev => prev.filter(e => e.id !== id)), 3000);
+        const leftOffset = Math.floor(Math.random() * 40) + 30; // 30%-70%, centered over the stage
+        const drift = `${Math.floor(Math.random() * 120) - 60}px`; // gentle left/right drift
+        const spin = `${Math.floor(Math.random() * 40) - 20}deg`; // slight rotation
+        setFloatingEmojis(prev => [...prev, { id, emoji, left: `${leftOffset}%`, drift, spin }]);
+        setTimeout(() => setFloatingEmojis(prev => prev.filter(e => e.id !== id)), 2800);
     };
 
     const handleSendReaction = (emoji) => {
@@ -663,21 +682,6 @@ export default function VideoMeetComponent() {
     return (
         <Box sx={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', bgcolor: askForUsername ? 'var(--bg-primary)' : '#202124', color: 'var(--text-primary)', overflow: 'hidden' }}>
 
-            <style>
-                {`
-                    @keyframes floatUpAnimation {
-                        0% { transform: translateY(0) scale(0.8); opacity: 1; }
-                        50% { opacity: 0.9; }
-                        100% { transform: translateY(-450px) scale(1.4); opacity: 0; }
-                    }
-                    @keyframes handPulse {
-                        0% { transform: scale(1); }
-                        50% { transform: scale(1.1); }
-                        100% { transform: scale(1); }
-                    }
-                `}
-            </style>
-
             <Snackbar open={!!alertMessage} autoHideDuration={3000} onClose={() => setAlertMessage("")}>
                 <Alert severity="warning">{alertMessage}</Alert>
             </Snackbar>
@@ -695,16 +699,16 @@ export default function VideoMeetComponent() {
                 /* LOBBY PAGE */
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, bgcolor: 'var(--bg-primary)' }}>
                     <Navbar />
-                    <Box sx={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', p: 4 }}>
-                        <Box sx={{ display: 'flex', width: '100%', maxWidth: '1000px', gap: '40px', flexWrap: 'wrap', alignItems: 'center' }}>
-                            <Box sx={{ flex: 1, minWidth: '320px' }}>
-                                <Typography variant="h4" sx={{ fontWeight: 900, mb: 1, color: 'var(--text-primary)' }}>Ready to Join?</Typography>
-                                <Card elevation={0} sx={{ p: 4, bgcolor: 'var(--bg-surface)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
+                    <Box sx={{ display: 'flex', flex: 1, alignItems: 'center', justifyContent: 'center', p: { xs: 2, sm: 4 } }}>
+                        <Box sx={{ display: 'flex', width: '100%', maxWidth: '1000px', gap: { xs: '24px', sm: '40px' }, flexWrap: 'wrap', alignItems: 'center' }}>
+                            <Box sx={{ flex: 1, minWidth: { xs: '100%', sm: '320px' } }}>
+                                <Typography variant="h4" sx={{ fontWeight: 900, mb: 1, color: 'var(--text-primary)', fontSize: { xs: '1.6rem', sm: '2.125rem' } }}>Ready to Join?</Typography>
+                                <Card elevation={0} sx={{ p: { xs: 2.5, sm: 4 }, bgcolor: 'var(--bg-surface)', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
                                     <TextField fullWidth label="Username" variant="standard" required value={username} onChange={e => setUsername(e.target.value)} sx={{ mb: 4 }} />
                                     <Button fullWidth variant="contained" onClick={connect} sx={{ py: 1.6, borderRadius: '8px', fontWeight: 700, textTransform: 'none', bgcolor: '#2563eb' }}>Connect & Enter Room</Button>
                                 </Card>
                             </Box>
-                            <Box sx={{ flex: 1.2, minWidth: '360px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <Box sx={{ flex: 1.2, minWidth: { xs: '100%', sm: '360px' }, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                 <Box sx={{ width: '100%', aspectRatio: '16/9', bgcolor: '#1e293b', borderRadius: '16px', overflow: 'hidden', position: 'relative' }}>
                                     <video ref={localVideoref} autoPlay muted playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', display: videoAvailable ? 'block' : 'none' }} />
                                     {!videoAvailable && (
@@ -790,15 +794,21 @@ export default function VideoMeetComponent() {
                     />
 
                     {/* FLOATING EMOJI LAYER */}
-                    <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 150, overflow: 'hidden' }}>
+                    <Box sx={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 9999, overflow: 'hidden' }}>
                         {floatingEmojis.map(item => (
-                            <Box key={item.id} sx={{
-                                position: 'absolute',
-                                bottom: '100px',
-                                left: item.left,
-                                fontSize: '3rem',
-                                animation: 'floatUpAnimation 3s cubic-bezier(0.1, 0.8, 0.3, 1) forwards'
-                            }}>
+                            <Box
+                                key={item.id}
+                                style={{ '--drift': item.drift, '--spin': item.spin }}
+                                sx={{
+                                    position: 'absolute',
+                                    bottom: '90px',
+                                    left: item.left,
+                                    fontSize: '3rem',
+                                    lineHeight: 1,
+                                    animation: `${floatUpAnimation} 2.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards`,
+                                    willChange: 'transform, opacity'
+                                }}
+                            >
                                 {item.emoji}
                             </Box>
                         ))}
@@ -880,7 +890,6 @@ export default function VideoMeetComponent() {
                                         ) : (
                                             <video
                                                 autoPlay
-                                                muted
                                                 playsInline
                                                 style={{ display: hostRemoteVideo?.isVideoActive ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'cover' }}
                                                 ref={ref => {
@@ -911,7 +920,7 @@ export default function VideoMeetComponent() {
                                         <Chip
                                             icon={<PanToolIcon sx={{ color: '#202124 !important' }} />}
                                             label="You raised hand"
-                                            sx={{ position: 'absolute', top: 16, left: 16, bgcolor: '#8ab4f8', color: '#202124', fontWeight: 600, animation: 'handPulse 1.5s infinite ease-in-out' }}
+                                            sx={{ position: 'absolute', top: 16, left: 16, bgcolor: '#8ab4f8', color: '#202124', fontWeight: 600, animation: `${handPulseAnimation} 1.5s infinite ease-in-out` }}
                                         />
                                     )}
                                     <Typography sx={{ position: 'absolute', bottom: 16, left: 16, color: '#ffffff', fontWeight: 500, fontSize: '0.85rem', bgcolor: 'rgba(0,0,0,0.65)', px: 1.5, py: 0.5, borderRadius: '6px' }}>
@@ -926,7 +935,6 @@ export default function VideoMeetComponent() {
                                             <video
                                                 data-socket={hostRemoteVideo.socketId}
                                                 autoPlay
-                                                muted
                                                 playsInline
                                                 style={{ display: hostRemoteVideo.isVideoActive ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'cover' }}
                                                 ref={ref => {
@@ -945,7 +953,7 @@ export default function VideoMeetComponent() {
                                                 <Chip
                                                     icon={<PanToolIcon sx={{ color: '#202124 !important' }} />}
                                                     label={`${hostRemoteVideo.name} raised hand`}
-                                                    sx={{ position: 'absolute', top: 16, left: 16, bgcolor: '#8ab4f8', color: '#202124', fontWeight: 600, animation: 'handPulse 1.5s infinite ease-in-out' }}
+                                                    sx={{ position: 'absolute', top: 16, left: 16, bgcolor: '#8ab4f8', color: '#202124', fontWeight: 600, animation: `${handPulseAnimation} 1.5s infinite ease-in-out` }}
                                                 />
                                             )}
                                             <Typography sx={{ position: 'absolute', bottom: 16, left: 16, color: '#ffffff', fontWeight: 500, fontSize: '0.85rem', bgcolor: 'rgba(0,0,0,0.65)', px: 1.5, py: 0.5, borderRadius: '6px' }}>
@@ -1023,7 +1031,6 @@ export default function VideoMeetComponent() {
                                     <video
                                         data-socket={v.socketId}
                                         autoPlay
-                                        muted
                                         playsInline
                                         style={{ display: v.isVideoActive ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'cover' }}
                                         ref={ref => {

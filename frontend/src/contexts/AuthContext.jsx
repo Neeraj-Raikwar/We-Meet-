@@ -8,7 +8,7 @@ export const AuthContext = createContext( {} ); // Initialization core communica
 
 // Local development server environment routing location proxy connectivity url baseline target point initialization assignment[cite: 3]
 const client = axios.create({
-    baseURL : `$${server.baseUrl}/api/v1/users`
+    baseURL : `${server.baseUrl}/api/v1/users`
 })
 
 export const AuthProvider = ({ children }) => {

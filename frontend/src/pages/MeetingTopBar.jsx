@@ -29,42 +29,53 @@ export default function MeetingTopBar({
             top: 0,
             left: 0,
             right: 0,
-            p: 2,
+            p: { xs: 1, sm: 2 },
             display: 'flex',
-            justify: 'space-between',
+            justifyContent: 'space-between',
             alignItems: 'center',
             zIndex: 20,
             background: 'linear-gradient(to bottom, rgba(0,0,0,0.8), transparent)'
         }}>
             {/* LEFT: CLOCK & ROOM CODE */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#fff' }}>
-                <Typography variant="body1" sx={{ fontWeight: '600' }}>{currentTime}</Typography>
-                <Typography variant="body1" sx={{ opacity: 0.5 }}>|</Typography>
-                <Typography variant="body1" sx={{ fontWeight: '600', fontFamily: 'monospace' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.75, sm: 1.5 }, color: '#fff', minWidth: 0 }}>
+                <Typography variant="body2" sx={{ fontWeight: '600', display: { xs: 'none', sm: 'block' } }}>{currentTime}</Typography>
+                <Typography variant="body1" sx={{ opacity: 0.5, display: { xs: 'none', sm: 'block' } }}>|</Typography>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        fontWeight: '600',
+                        fontFamily: 'monospace',
+                        fontSize: { xs: '0.75rem', sm: '1rem' },
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: { xs: '90px', sm: 'none' }
+                    }}
+                >
                     {window.location.pathname.split("/").pop() || 'mni-bfhy-qor'}
                 </Typography>
             </Box>
 
             {/* RIGHT: ACTIONS & CONTROLS */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 0.75, sm: 2 } }}>
                 {hasWaiting && (
                     <Box
                         onClick={onToggleWaiting}
                         sx={{
                             display: 'flex',
                             alignItems: 'center',
-                            gap: 1,
+                            gap: { xs: 0.5, sm: 1 },
                             backgroundColor: '#81c784',
                             color: '#1b5e20',
-                            px: 2,
-                            py: 0.75,
+                            px: { xs: 1, sm: 2 },
+                            py: { xs: 0.5, sm: 0.75 },
                             borderRadius: '24px',
                             cursor: 'pointer',
                             '&:hover': { opacity: 0.9 }
                         }}
                     >
-                        <PeopleIcon sx={{ fontSize: '1.2rem' }} />
-                        <Typography variant="body2" sx={{ fontWeight: 700 }}>Admit guest</Typography>
+                        <PeopleIcon sx={{ fontSize: { xs: '1rem', sm: '1.2rem' } }} />
+                        <Typography variant="body2" sx={{ fontWeight: 700, display: { xs: 'none', sm: 'block' } }}>Admit guest</Typography>
                     </Box>
                 )}
 
@@ -72,9 +83,12 @@ export default function MeetingTopBar({
                 <Tooltip title="Transcribe call">
                     <IconButton
                         onClick={onToggleTranscript}
+                        size="small"
                         sx={{
                             color: isTranscriptOpen ? '#8ab4f8' : '#fff',
                             backgroundColor: 'rgba(255,255,255,0.08)',
+                            p: { xs: 0.75, sm: 1 },
+                            '& svg': { fontSize: { xs: '1.1rem', sm: '1.4rem' } },
                             '&:hover': { backgroundColor: 'rgba(255,255,255,0.18)' }
                         }}
                     >
@@ -86,9 +100,12 @@ export default function MeetingTopBar({
                 <Tooltip title="Show participants">
                     <IconButton
                         onClick={onTogglePeople}
+                        size="small"
                         sx={{
                             backgroundColor: 'rgba(255,255,255,0.08)',
                             color: '#fff',
+                            p: { xs: 0.75, sm: 1 },
+                            '& svg': { fontSize: { xs: '1.1rem', sm: '1.4rem' } },
                             '&:hover': { backgroundColor: 'rgba(255,255,255,0.18)' }
                         }}
                     >
