@@ -20,7 +20,6 @@ export default function LandingPage() {
 
     return (
         <div
-            className='landingPageContainer'
             style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -73,15 +72,15 @@ export default function LandingPage() {
 
             <div style={{ position: 'relative', zIndex: 1 }}>
                 {/* NAVIGATION BAR */}
-                <Box component="nav" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 1, padding: { xs: '1rem 1.25rem', sm: '1.5rem 2rem' } }}>
-                    <div className='navHeader'>
-                        <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', margin: 0, fontSize: 'clamp(1.1rem, 4vw, 1.5rem)' }} onClick={() => navigate("/")}>
+                <Box component="nav" sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'nowrap', width: '100%', boxSizing: 'border-box', padding: { xs: '1rem 1.25rem', sm: '1.5rem 2rem' } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                        <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', margin: 0, fontSize: 'clamp(1.1rem, 4vw, 1.5rem)', whiteSpace: 'nowrap' }} onClick={() => navigate("/")}>
                             <span className="live-logo-icon">🔵</span>
                             We<span style={{ color: "var(--brand-primary)" }}>Meet</span>
                         </h2>
-                    </div>
+                    </Box>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: '20px' } }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, sm: '20px' }, flexShrink: 0 }}>
                         <IconButton onClick={toggleTheme} color="inherit" size="small">
                             {darkMode ? <Brightness7Icon sx={{ color: '#f59e0b' }} /> : <Brightness4Icon />}
                         </IconButton>
@@ -107,7 +106,6 @@ export default function LandingPage() {
 
                 {/* HERO MAIN CONTAINER */}
                 <Box
-                    className="landingMainContainer"
                     sx={{
                         display: 'flex',
                         flexDirection: { xs: 'column', md: 'row' },

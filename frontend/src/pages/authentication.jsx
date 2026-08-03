@@ -11,7 +11,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import IconButton from '@mui/material/IconButton';
 import { useContext, useEffect, useMemo, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { AuthContext } from '../contexts/AuthContext';
 import { ThemeContext } from '../contexts/ThemeContext';
@@ -285,12 +285,16 @@ export default function Authentication() {
                     {/* Bottom Legal / Help Bar */}
                     <Box sx={{ width: '100%', textAlign: 'center', mt: 4, maxWidth: '650px' }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mb: 1 }}>
-                            <Typography variant="caption" sx={{ color: '#2563eb', cursor: 'pointer', fontSize: '1rem', fontWeight: 500 }}>Help</Typography>
-                            <Typography variant="caption" sx={{ color: '#2563eb', cursor: 'pointer', fontSize: '1rem', fontWeight: 500 }}>Terms</Typography>
-                            <Typography variant="caption" sx={{ color: '#2563eb', cursor: 'pointer', fontSize: '1rem', fontWeight: 500 }}>Privacy</Typography>
+                            <Typography component={Link} to="/help" variant="caption" sx={{ color: '#2563eb', cursor: 'pointer', fontSize: '1rem', fontWeight: 500, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Help</Typography>
+                            <Typography component={Link} to="/terms" variant="caption" sx={{ color: '#2563eb', cursor: 'pointer', fontSize: '1rem', fontWeight: 500, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Terms</Typography>
+                            <Typography component={Link} to="/privacy" variant="caption" sx={{ color: '#2563eb', cursor: 'pointer', fontSize: '1rem', fontWeight: 500, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Privacy</Typography>
                         </Box>
                         <Typography variant="caption" sx={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, display: 'block', mx: 'auto', px: 2 }}>
-                            WeMeet is protected by reCAPTCHA and the Google <span style={{ color: '#2563eb', cursor: 'pointer', fontWeight: 500 }}>Privacy Policy</span> and <span style={{ color: '#2563eb', cursor: 'pointer', fontWeight: 500 }}>Terms of Service</span> apply.
+                            WeMeet is protected by reCAPTCHA and the Google{' '}
+                            <Box component="a" href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" sx={{ color: '#2563eb', cursor: 'pointer', fontWeight: 500, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Privacy Policy</Box>{' '}
+                            and{' '}
+                            <Box component="a" href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" sx={{ color: '#2563eb', cursor: 'pointer', fontWeight: 500, textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>Terms of Service</Box>{' '}
+                            apply.
                         </Typography>
                     </Box>
                 </Box>

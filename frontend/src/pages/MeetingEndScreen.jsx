@@ -19,19 +19,34 @@ export default function MeetingEndScreen({ meetingCode, username, onRejoin }) {
     const handleSubmitFeedback = async () => {
         if (!rating && !feedback.trim()) return;
         setSubmitting(true);
+
+        // Without an explicit timeout, fetch() will wait forever if the backend
+        // hangs (e.g. a slow/blocked outbound SMTP connection while sending the
+        // email) — that's what was leaving this button stuck on "Sending...".
+        // Aborting after 15s guarantees the UI always recovers either way.
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
         try {
             const res = await fetch(`${BACKEND_URL}/api/v1/meetings/feedback`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ meetingCode, username, rating, feedback })
+                body: JSON.stringify({ meetingCode, username, rating, feedback }),
+                signal: controller.signal
             });
             if (!res.ok) throw new Error('Request failed');
             setSubmitted(true);
             setSnackbar("Thanks — your feedback has been sent!");
         } catch (e) {
-            console.error("Feedback submit error:", e);
-            setSnackbar("Couldn't send feedback right now. Please try again later.");
+            if (e.name === 'AbortError') {
+                console.error("Feedback submit timed out after 15s");
+                setSnackbar("This is taking too long — please try again in a moment.");
+            } else {
+                console.error("Feedback submit error:", e);
+                setSnackbar("Couldn't send feedback right now. Please try again later.");
+            }
         } finally {
+            clearTimeout(timeoutId);
             setSubmitting(false);
         }
     };
