@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";        // password hashing aur verification ke liye
 import crypto from "crypto";        // random authentication tokens generate karne ke liye
 import httpStatus from "http-status";   // standard HTTP status codes use karne ke liye
-import nodemailer from "nodemailer";    // email pe OTP send karne ke liye
+import { Resend } from "resend";    // email pe OTP send karne ke liye
 import { Meeting } from "../models/meeting.model.js";       // meeting history schema import
 import { User } from "../models/user.model.js";     // user schema import
 
@@ -131,22 +131,14 @@ const resetPasswordRequest = async (req, res) => {
         user.resetOTPExpires = Date.now() + 5 * 60 * 1000; // 5 mins validity
         await user.save();
 
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
-        });
+        const resend = new Resend(process.env.RESEND_API_KEY);
 
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
+        await resend.emails.send({
+            from: 'onboarding@resend.dev',
             to: user.username,
             subject: 'WeMeet Access Verification Key Code Reset Request Security Portal',
             text: `A password modification protocol has been initiated for your WeMeet account profile. Your verification token security entry is: ${otp}. This code will dissolve within 5 minutes framework windows.`
-        };
-
-        await transporter.sendMail(mailOptions);
+        });
         return res.status(httpStatus.OK).json({ message: "Verification token securely dispatched to the target email destination address location!" });
     } catch (error) {
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ message: `Mailing distribution channels failure or SMTP integration trace error caught: ${error.message}` });

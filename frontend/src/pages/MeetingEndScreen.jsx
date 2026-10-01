@@ -52,7 +52,7 @@ export default function MeetingEndScreen({ meetingCode, username, onRejoin }) {
     };
 
     return (
-        <Box sx={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: '#ffffff', p: 2 }}>
+        <Box sx={{ height: '100dvh', width: '100vw', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', bgcolor: '#ffffff', p: 2 }}>
             <Typography variant="h4" sx={{ fontWeight: 500, color: '#202124', mb: 3, textAlign: 'center' }}>
                 You've left the meeting
             </Typography>
@@ -91,7 +91,7 @@ export default function MeetingEndScreen({ meetingCode, username, onRejoin }) {
                                     onClick={() => setRating(star)}
                                     onMouseEnter={() => setHoverRating(star)}
                                     onMouseLeave={() => setHoverRating(0)}
-                                    sx={{ cursor: 'pointer', color: (hoverRating || rating) >= star ? '#fbbc04' : '#dadce0' }}
+                                    sx={{ cursor: 'pointer', color: (hoverRating || rating) >= star ? '#fbbc04' : '#bdc1c6' }}
                                 >
                                     {(hoverRating || rating) >= star ? <StarIcon sx={{ fontSize: '2rem' }} /> : <StarBorderIcon sx={{ fontSize: '2rem' }} />}
                                 </Box>

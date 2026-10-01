@@ -29,10 +29,12 @@ export default function PeoplePanel({
             elevation={4}
             sx={{
                 position: 'absolute',
-                top: 16,
+                top: { xs: 'auto', sm: 16 },
                 right: 16,
-                bottom: 80,
-                width: { xs: 'calc(100vw - 32px)', sm: 360 },
+                bottom: { xs: 90, sm: 80 },
+                left: { xs: 16, sm: 'auto' },
+                width: { xs: 'auto', sm: 360 },
+                maxHeight: { xs: '60vh', sm: 'auto' },
                 backgroundColor: '#ffffff',
                 color: '#202124',
                 borderRadius: '16px',

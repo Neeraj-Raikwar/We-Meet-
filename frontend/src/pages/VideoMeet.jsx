@@ -680,7 +680,7 @@ export default function VideoMeetComponent() {
     }
 
     return (
-        <Box sx={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', bgcolor: askForUsername ? 'var(--bg-primary)' : '#202124', color: 'var(--text-primary)', overflow: 'hidden' }}>
+        <Box sx={{ height: '100dvh', width: '100vw', display: 'flex', flexDirection: 'column', bgcolor: askForUsername ? 'var(--bg-primary)' : '#202124', color: 'var(--text-primary)', overflow: 'hidden' }}>
 
             <Snackbar open={!!alertMessage} autoHideDuration={3000} onClose={() => setAlertMessage("")}>
                 <Alert severity="warning">{alertMessage}</Alert>
@@ -910,7 +910,7 @@ export default function VideoMeetComponent() {
                             ) : isHost ? (
                                 /* NORMAL MODE - HOST / ADMIN IN BIG CENTER SCREEN */
                                 <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <video ref={localVideoref} autoPlay muted playsInline style={{ display: video ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <Box component="video" ref={localVideoref} autoPlay muted playsInline sx={{ display: video ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'contain' }} />
                                     {!video && (
                                         <Avatar sx={{ width: 100, height: 100, fontSize: '3rem', bgcolor: '#e91e63' }}>
                                             {username ? username.charAt(0).toUpperCase() : 'A'}
@@ -932,11 +932,12 @@ export default function VideoMeetComponent() {
                                 <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     {hostRemoteVideo ? (
                                         <>
-                                            <video
+                                            <Box
+                                                component="video"
                                                 data-socket={hostRemoteVideo.socketId}
                                                 autoPlay
                                                 playsInline
-                                                style={{ display: hostRemoteVideo.isVideoActive ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'cover' }}
+                                                sx={{ display: hostRemoteVideo.isVideoActive ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'contain' }}
                                                 ref={ref => {
                                                     const hostCameraStream = hostRemoteVideo?.cameraStream || hostRemoteVideo?.stream;
                                                     if (ref && hostCameraStream && ref.srcObject !== hostCameraStream) {
@@ -985,8 +986,8 @@ export default function VideoMeetComponent() {
                         }}>
                             {!isHost && (
                                 <Box sx={{
-                                    width: { xs: '130px', md: '160px' },
-                                    height: { xs: '75px', md: '90px' },
+                                    width: { xs: '110px', md: '160px' },
+                                    height: { xs: '65px', md: '90px' },
                                     borderRadius: '12px',
                                     overflow: 'hidden',
                                     bgcolor: '#202124',
@@ -998,7 +999,7 @@ export default function VideoMeetComponent() {
                                     justifyContent: 'center',
                                     flexShrink: 0
                                 }}>
-                                    <video ref={localVideoref} autoPlay muted playsInline style={{ display: video ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <Box component="video" ref={localVideoref} autoPlay muted playsInline sx={{ display: video ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'cover' }} />
                                     {!video && (
                                         <Avatar sx={{ width: 36, height: 36, fontSize: '1rem', bgcolor: '#e91e63' }}>
                                             {username ? username.charAt(0).toUpperCase() : 'Y'}
@@ -1015,8 +1016,8 @@ export default function VideoMeetComponent() {
 
                             {pipParticipants.map((v) => (
                                 <Box key={v.socketId} sx={{
-                                    width: { xs: '130px', md: '160px' },
-                                    height: { xs: '75px', md: '90px' },
+                                    width: { xs: '110px', md: '160px' },
+                                    height: { xs: '65px', md: '90px' },
                                     borderRadius: '12px',
                                     overflow: 'hidden',
                                     bgcolor: '#202124',
@@ -1028,11 +1029,12 @@ export default function VideoMeetComponent() {
                                     justifyContent: 'center',
                                     flexShrink: 0
                                 }}>
-                                    <video
+                                    <Box
+                                        component="video"
                                         data-socket={v.socketId}
                                         autoPlay
                                         playsInline
-                                        style={{ display: v.isVideoActive ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'cover' }}
+                                        sx={{ display: v.isVideoActive ? 'block' : 'none', width: '100%', height: '100%', objectFit: 'cover' }}
                                         ref={ref => {
                                             const camStream = v.cameraStream || v.stream;
                                             if (ref && camStream && ref.srcObject !== camStream) {
